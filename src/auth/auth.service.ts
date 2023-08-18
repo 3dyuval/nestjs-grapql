@@ -1,21 +1,31 @@
-import { LoginUserInput } from './dto/login-user.input';
-import { UsersService } from './../users/users.service';
-import { Injectable } from '@nestjs/common';
-import { User } from 'src/users/entities/user.entity';
+import { LoginUserInput } from './dto/login-user.input'
+import { UsersService } from './../users/users.service'
+import { Injectable } from '@nestjs/common'
+import { User } from 'src/users/entities/user.entity'
+import { LoginUserResponse } from './dto/login-user.response'
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UsersService) {}
 
-  validateUser(userLoginInput: UserLogin) {
-    const user = this.userService.findOne(user);
-    if (!user) {
-      return null;
+  async validateUser(username: string, password: string) {
+    const user = await this.userService.findOne(username).catch(console.warn)
+
+    if (user && user.password === password) {
+      const { password, ...result } = user
+      return result
     }
-    return user;
+    return null
   }
 
-  login(input: LoginUserInput): User {
-    return this.validateUser(input);
+  async login(userLoginInput: LoginUserInput): Promise<LoginUserResponse> {
+    const { password, ...result } = await this.userService.findOne(
+      userLoginInput.username
+    )
+
+    return {
+      access_token: 'jwt',
+      ...result,
+    }
   }
 }

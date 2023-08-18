@@ -4,27 +4,39 @@
 
 type User {
   username: String!
+  password: String!
   id: Int!
+}
+
+type LoginUserResponse {
+  username: String!
+  access_token: String!
 }
 
 type Query {
   users: [User!]!
-  user(id: Int!): User!
+  user(username: String!): User!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
+  login(loginUserInput: LoginUserInput!): LoginUserResponse!
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  username: String!
+  password: String!
 }
 
 input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  username: String
+  password: String!
   id: Int!
+}
+
+input LoginUserInput {
+  username: String!
+  password: String!
 }
