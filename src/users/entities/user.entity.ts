@@ -1,0 +1,10 @@
+import { ObjectType, Field, Int } from '@nestjs/graphql';
+
+@ObjectType()
+export class User {
+  @Field()
+  username: string;
+
+  @Field(() => Int)
+  id: number;
+}
